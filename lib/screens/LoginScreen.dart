@@ -5,6 +5,7 @@ import 'package:cottage_app/screens/HomeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:cottage_app/services/authservice.dart';
 import 'package:cottage_app/services/signin.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cottage_app/screens/style.dart';
 class LoginScreen extends StatefulWidget {
@@ -271,13 +272,17 @@ return Scaffold(
           child: InkWell(
             splashColor: Colors.white12,
             onTap: () {
-              signInWithGoogle().whenComplete(() {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => HomeScreen(),
-              ),
-            );
-          });
+              signUpWithFacebook().whenComplete(() {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return HomeScreen();
+                    },
+                  ),
+                );
+              }
+              )
+              ;
             },
             child: Center(
               child: Icon(
@@ -332,6 +337,24 @@ return Scaffold(
         ],
       ),
         ))  );
+  }
+  Future<void> signUpWithFacebook() async{
+    try {
+      var facebookLogin = new FacebookLogin();
+      var result = await facebookLogin.logIn(['email']);
+
+      if(result.status == FacebookLoginStatus.loggedIn) {
+        final AuthCredential credential = FacebookAuthProvider.getCredential(
+          accessToken: result.accessToken.token,
+
+        );
+        final FirebaseUser user = (await FirebaseAuth.instance.signInWithCredential(credential)).user;
+        print('signed in ' + user.displayName);
+        return user;
+      }
+    }catch (e) {
+      print(e.message);
+    }
   }
 
 

@@ -67,6 +67,8 @@ dependencies:
   webview_flutter: ^0.3.22+1
   google_sign_in: ^4.4.4
   image_picker: ^0.6.7+4
+  flutter_facebook_login: ^3.0.0
+  firebase_messaging: ^6.0.16
 dev_dependencies:
   flutter_test:
     sdk: flutter
